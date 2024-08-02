@@ -1,0 +1,8 @@
+services: 
+  nginx:
+    image: nginx:kikes
+    container_name: nginx
+    build: ./requirements/nginx
+    ports:
+    - 443:443
+    restart: always
