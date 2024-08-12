@@ -1,8 +1,55 @@
 services: 
   nginx:
-    image: nginx:kikes
     container_name: nginx
     build: ./requirements/nginx
     ports:
-    - 443:443
+      - "443:443"
     restart: always
+    networks:
+      - inception
+    volumes:
+      - wordpress:/var/www/html
+    depends_on:
+      - wordpress
+
+  wordpress:
+    build: ./requirements/wordpress
+    container_name: wordpress
+    networks:
+      - inception
+    volumes:
+      - wordpress:/var/www/html
+    depends_on:
+      - mariadb
+    env_file :
+      - .env
+
+  mariadb:
+    build: ./requirements/mariadb
+    container_name: mariadb
+    volumes:
+      - mariadb:/var/lib/mysql
+    networks:
+      - inception
+    env_file :
+      - .env
+
+volumes:
+  mariadb:
+    name: mariadb
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/${USER}/data/db
+      o: bind
+  wordpress:
+    name: wordpress
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/${USER}/data/wp
+      o: bind
+
+networks:
+  inception:
+    name: inception

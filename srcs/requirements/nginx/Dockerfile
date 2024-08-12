@@ -8,7 +8,6 @@ RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
 	-out /etc/ssl/certs/inception.cert \
 	-subj "/CN=lsulzbac.42.fr"
 
-COPY index.html /var/www/html/
 COPY nginx.conf /etc/nginx/nginx.conf
 
 EXPOSE 443

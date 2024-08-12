@@ -1,5 +1,5 @@
-DB_FOLDER = /home/lsulzbac/data/db
-WP_FOLDER = /home/lsulzbac/data/wp
+DB_FOLDER = /home/$(USER)/data/db
+WP_FOLDER = /home/$(USER)/data/wp
 
 all:
 	@mkdir -p $(DB_FOLDER)
@@ -11,5 +11,9 @@ clean:
 	@docker stop $$(docker ps -qa) || true
 	@docker rm $$(docker ps -qa) || true
 	@docker rmi -f $$(docker images -qa) || true
-	@rm -rf $(DB_FOLDER)
-	@rm -rf $(WP_FOLDER)
+	@docker volume rm $$(docker volume ls -q) || true
+	@docker network rm $$(docker network ls -q) || true
+	@rm -rf $(WP_FOLDER) || true
+	@rm -rf $(DB_FOLDER) || true
+
+re: clean all
