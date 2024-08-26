@@ -1,36 +1,51 @@
 FROM debian:bullseye
 
-# Install necessary packages
-RUN apt-get update && \
-    apt-get install -y \
-    php7.4-fpm \
-    php7.4-mysql \
-    wget \
-    tar \
-    && apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+# update and upgrade the system
+RUN apt-get update && apt-get upgrade -y
 
-# Create necessary directories
-RUN mkdir -p /var/www/html /run/php
+# install the required packages
+RUN apt-get install -y curl php php7.4-fpm php-mysql netcat sendmail
 
-# Install WordPress
-RUN wget https://wordpress.org/latest.tar.gz && \
-    tar -xzf latest.tar.gz && \
-    rm latest.tar.gz && \
-    mv wordpress/* /var/www/html/
+# copy the wordpress configuration script to the root directory in the container
+COPY ./wp.sh /
 
-# Set up permissions
-RUN chown -R www-data:www-data /var/www/html && \
-    chmod -R 755 /var/www/html
+# change the permission of the script to make it executable
+RUN  chmod +x wp.sh
 
-# Expose the necessary port for PHP-FPM
-EXPOSE 9000
+# define the entrypoint command to run when the container starts
+ENTRYPOINT ["./wp.sh"]
 
-# Configure PHP-FPM to listen on TCP port 9000
-RUN sed -i 's/listen = \/run\/php\/php7.4-fpm.sock/listen = 9000/' /etc/php/7.4/fpm/pool.d/www.conf
+# # Install necessary packages
+# RUN apt-get update && \
+#     apt-get install -y \
+#     php7.4-fpm \
+#     php7.4-mysql \
+#     wget \
+#     tar \
+#     && apt-get clean && \
+#     rm -rf /var/lib/apt/lists/*
 
-# Ensure the PID directory exists
-RUN mkdir -p /run/php && chown -R www-data:www-data /run/php
+# # Create necessary directories
+# RUN mkdir -p /var/www/html /run/php
 
-# Start PHP-FPM
-CMD ["php-fpm7.4", "--nodaemonize"]
+# # Install WordPress
+# RUN wget https://wordpress.org/latest.tar.gz && \
+#     tar -xzf latest.tar.gz && \
+#     rm latest.tar.gz && \
+#     mv wordpress/* /var/www/html/
+
+# # Set up permissions
+# RUN chown -R www-data:www-data /var/www/html && \
+#     chmod -R 755 /var/www/html
+
+# # Expose the necessary port for PHP-FPM
+# EXPOSE 9000
+
+# # Configure PHP-FPM to listen on TCP port 9000
+# RUN sed -i 's/listen = \/run\/php\/php7.4-fpm.sock/listen = 9000/' /etc/php/7.4/fpm/pool.d/www.conf
+
+# # Ensure the PID directory exists
+# RUN mkdir -p /run/php && chown -R www-data:www-data /run/php
+
+# # Start PHP-FPM
+# CMD ["php-fpm7.4", "--nodaemonize"]
