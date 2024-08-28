@@ -10,7 +10,8 @@ services:
     volumes:
       - wordpress:/var/www/wordpress
     depends_on:
-      - wordpress
+      wordpress:
+        condition: service_healthy
 
   wordpress:
     build: ./requirements/wordpress
@@ -24,6 +25,12 @@ services:
         condition: service_healthy
     env_file :
       - .env
+    healthcheck:
+      test: ["CMD", "/health.sh"]
+      interval: 30s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
 
   mariadb:
     build: ./requirements/mariadb

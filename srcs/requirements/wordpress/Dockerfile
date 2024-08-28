@@ -8,9 +8,10 @@ RUN apt-get install -y curl php php7.4-fpm php-mysql netcat sendmail
 
 # copy the wordpress configuration script to the root directory in the container
 COPY ./wp.sh /
-
+COPY ./health.sh /
 # change the permission of the script to make it executable
 RUN  chmod +x wp.sh
+RUN  chmod +x health.sh
 
 # define the entrypoint command to run when the container starts
 ENTRYPOINT ["./wp.sh"]
