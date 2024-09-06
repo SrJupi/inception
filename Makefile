@@ -28,8 +28,8 @@ clean: stop
 	@docker rmi -f $$(docker images -qa) || true
 	@docker volume rm $$(docker volume ls -q) || true
 	@docker network rm inception || true
-	@rm -rf $(WP_FOLDER) || true
-	@rm -rf $(DB_FOLDER) || true
+	@sudo rm -rf $(WP_FOLDER) || true
+	@sudo rm -rf $(DB_FOLDER) || true
 
 re: clean all
 

@@ -8,8 +8,8 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # copy files from host to container
-COPY ./entry.sh /usr/local/bin/entry.sh
-COPY ./health.sh /usr/local/bin/health.sh
+COPY ./tools/entry.sh /usr/local/bin/entry.sh
+COPY ./tools/health.sh /usr/local/bin/health.sh
 
 # Give execution permissions to the script
 RUN chmod +x /usr/local/bin/entry.sh /usr/local/bin/health.sh

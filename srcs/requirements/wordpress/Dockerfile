@@ -1,52 +1,18 @@
 FROM debian:bullseye
 
-# update and upgrade the system
-RUN apt-get update && apt-get upgrade -y
+# Update and install required packages
+RUN apt-get update && apt-get install -y curl php php7.4-fpm php-mysql && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# install the required packages
-RUN apt-get install -y curl php php7.4-fpm php-mysql netcat sendmail
+# Copy the custom PHP-FPM configuration
+COPY ./conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
 
-# copy the wordpress configuration script to the root directory in the container
-COPY ./wp.sh /
-COPY ./health.sh /
-# change the permission of the script to make it executable
-RUN  chmod +x wp.sh
-RUN  chmod +x health.sh
+# Copy the WordPress setup script
+COPY ./tools/wp.sh /
+COPY ./tools/health.sh /
 
-# define the entrypoint command to run when the container starts
+# Change permissions to make the scripts executable
+RUN chmod +x wp.sh health.sh
+
+# Define the entrypoint command
 ENTRYPOINT ["./wp.sh"]
-
-# # Install necessary packages
-# RUN apt-get update && \
-#     apt-get install -y \
-#     php7.4-fpm \
-#     php7.4-mysql \
-#     wget \
-#     tar \
-#     && apt-get clean && \
-#     rm -rf /var/lib/apt/lists/*
-
-# # Create necessary directories
-# RUN mkdir -p /var/www/html /run/php
-
-# # Install WordPress
-# RUN wget https://wordpress.org/latest.tar.gz && \
-#     tar -xzf latest.tar.gz && \
-#     rm latest.tar.gz && \
-#     mv wordpress/* /var/www/html/
-
-# # Set up permissions
-# RUN chown -R www-data:www-data /var/www/html && \
-#     chmod -R 755 /var/www/html
-
-# # Expose the necessary port for PHP-FPM
-# EXPOSE 9000
-
-# # Configure PHP-FPM to listen on TCP port 9000
-# RUN sed -i 's/listen = \/run\/php\/php7.4-fpm.sock/listen = 9000/' /etc/php/7.4/fpm/pool.d/www.conf
-
-# # Ensure the PID directory exists
-# RUN mkdir -p /run/php && chown -R www-data:www-data /run/php
-
-# # Start PHP-FPM
-# CMD ["php-fpm7.4", "--nodaemonize"]
