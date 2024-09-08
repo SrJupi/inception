@@ -50,4 +50,4 @@ else
 fi
 
 # Start PHP-FPM
-/usr/sbin/php-fpm7.4 -F
+exec /usr/sbin/php-fpm7.4 -F
