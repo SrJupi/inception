@@ -49,7 +49,6 @@ The infrastructure consists of the following services:
 
 * Docker and Docker Compose must be installed.
 * All images are built from Debian, no pre-built images from external sources are allowed.
-* The domain must be configured to point to login.42.fr (replace login with your username).
 
 ## Installation
 
@@ -57,8 +56,8 @@ The infrastructure consists of the following services:
 
 ``` bash
 
-git clone https://github.com/your-repo.git
-cd your-repo
+git clone https://github.com/SrJupi/inception
+cd inception
 
 ```
 
@@ -97,7 +96,7 @@ make
 
 ```
 
-Access the WordPress site at: https://login.42.fr (replace login with your username).
+Access the WordPress site at the DOMAIN_NAME that you set on your .env file.
 
 ## Health Checks
 
