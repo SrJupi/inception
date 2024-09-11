@@ -30,8 +30,8 @@ services:
       test: ["CMD", "/health.sh"]
       interval: 30s
       timeout: 5s
-      retries: 10
-      start_period: 30s
+      retries: 5
+      start_period: 60s
 
   mariadb:
     build: ./requirements/mariadb
@@ -47,8 +47,8 @@ services:
       test: ["CMD", "/usr/local/bin/health.sh"]
       interval: 30s
       timeout: 5s
-      retries: 3
-      start_period: 30s
+      retries: 5
+      start_period: 60s
 
 volumes:
   mariadb:

@@ -20,14 +20,13 @@ start:
 down:
 	docker compose -f ./srcs/docker-compose.yml down
 
+full_down:
+	docker compose -f ./srcs/docker-compose.yml down --rmi all --volumes
+
 stop:
 	docker compose -f ./srcs/docker-compose.yml stop
 
-clean: stop
-	@docker rm $$(docker ps -qa) || true
-	@docker rmi -f $$(docker images -qa) || true
-	@docker volume rm $$(docker volume ls -q) || true
-	@docker network rm inception || true
+clean: full_down
 	@sudo rm -rf $(WP_FOLDER) || true
 	@sudo rm -rf $(DB_FOLDER) || true
 
